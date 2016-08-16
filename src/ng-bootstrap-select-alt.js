@@ -62,40 +62,79 @@
             $scope.$watchCollection('options', function(newVal, oldVal) {
                 vm.refresh();
             });
+            $scope.$watch('model', function(newVal, oldVal) {
+                if ($scope.config.multiple) {
+                    if (!(newVal instanceof Array)) {
+                        throw new Error('In multiple mode, bsModel should be an array, but it is: ' + newVal);
+                    }
+                }
+                else {
+                    if (!(newVal instanceof Array)) {
+                        throw new Error('While not in multiple mode, bsModel should\'nt be an array, but it is: ' + newVal);
+                    }
+                    vm.render();
+                }
+            })
             if ($scope.config.multiple) {
                 $scope.$watchCollection('model', function(newVal, oldVal) {
-                    vm.refresh();
+                    vm.render();
                 });
             }
-            else {
-                $scope.$watch('model', function(newVal, oldVal) {
-                    vm.refresh();
-                })
-            }
             vm.addOption = function(bsOption) {
-                var key = vm.key(bsOption);
+                var key = vm.key(bsOption.data());
+                if ($scope.options.hasOwnProperty(key))
+                    throw new Error('Duplicate key: ' + key);
                 $scope.options[key] = bsOption;
             }
             vm.removeOption = function(bsOption) {
-                var key = vm.key(bsOption);
+                var key = vm.key(bsOption.data());
                 delete $scope.options[key];
             }
-            vm.key = function(bsOption) {
+            vm.key = function(obj) {
                 return ($scope.config.keyName
-                    ? bsOption.data()[$scope.config.keyName]
-                    : bsOption.data())
+                    ? obj[$scope.config.keyName]
+                    : obj)
             }
-            vm.refresh = function() {
+            function setSelection(obj) {
+                var key = vm.key(obj);
+                if ($scope.options[key].isSelected()) throw new Error('Duplicate key in bsModel: ' + key);
+                $scope.options[key].toggle(true);
+            }
+            function unmarkOptions() {
+                for (var opt in $scope.options) {
+                    if( obj.hasOwnProperty(p) ) {
+                        opt.toggle(false);
+                    } 
+                }
+            }
+            vm.render = function() {
+                if ($scope.model === undefined) return;
+                unmarkOptions();
                 if ($scope.config.multiple) {
-
+                    var length = $scope.model.length;
+                    for (var i = 0; i < ) {
+                        setSelection($scope.model[i])
+                    }
                 }
                 else {
-                    if ($scope.model !== undefined)
-                        $scope.options
+                    setSelection($scope.model);
                 }
-                var length = $scope
+            }
+            vm.isSelected = function(obj) {
+                var key = vm.key(obj);
+                $scope.model
             }
             vm.optionClick = function(bsOption) {
+                if ($scope.config.multiple) {
+
+                } else {
+                    if ($scope.model == bsOption.data()) {
+
+                    }
+                }
+                if () {
+
+                }
             }
             $scope.anySelected = function() {
                 if ($scope.config.multiple) {
@@ -164,7 +203,7 @@
         function link(scope, element, attrs, ctrls) {
             var bsSelect = ctrls[0];
             var bsOption = ctrls[1];
-            if ($scope.data !== undefined) {
+            if ($scope.data !== undefined && $scope.selectable !== false) {
                 bsSelect.addOption(bsOption);   
             }
             scope.bsSelect = bsSelect;
@@ -183,17 +222,6 @@
             }
             vm.data = function() {
                 return $scope.data;
-            }
-            vm.isSelected = function() {
-                return Boolean($scope.selected);
-            }
-            vm.toggle = function(state) {
-                if (state == null) state = !$scope.selected;
-                $scope.selected = state;
-                vm.mark(state);
-            }
-            vm.selectable = function() {
-                return $scope.selectable;
             }
             $scope.click = function() {
                 $scope.bsSelect.optionClick(vm);
