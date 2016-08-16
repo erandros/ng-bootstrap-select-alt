@@ -1,0 +1,25 @@
+{ 
+  "name": "ng-bootstrap-select-alt",
+  "main": "ng-bootstrap-select-alt.js",
+  "homepage": "https://github.com/erandros/ng-bootstrap-select-alt",
+  "authors": [
+    "erandros <guidotarsia@gmail.com>"
+  ],
+  "description": "An angular select directive inspired on bootstrap-select style",
+  "keywords": [
+    "angular",
+    "bootstrap",
+    "select"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}
