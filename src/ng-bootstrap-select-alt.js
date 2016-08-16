@@ -158,19 +158,25 @@
                 'data': '=bsOption',
                 'selectable': '=?bsSelectable'
             },
-            require: '^^bsSelect',
+            require: ['^^bsSelect', 'bsOption'],
             controller: ['$scope', BsOptionCtrl]
         }
-        function link(scope, element, attrs, bsSelect) {
-            bsSelect.addOption(this);
+        function link(scope, element, attrs, ctrls) {
+            var bsSelect = ctrls[0];
+            var bsOption = ctrls[1];
+            if ($scope.data !== undefined) {
+                bsSelect.addOption(bsOption);   
+            }
             scope.bsSelect = bsSelect;
             scope.el = element;
         }
         function BsOptionCtrl($scope) {
             var vm = this;
-            $scope.$on('$destroy', function() {
-                $scope.bsSelect.removeOption(vm);
-            })
+            if ($scope.data !== undefined) {
+                $scope.$on('$destroy', function() {
+                    $scope.bsSelect.removeOption(vm);
+                })   
+            }
             if ($scope.selectable !== false) $scope.selectable = true;
             vm.mark = function(selected) {
                 $scope.el.toggleClass('selected', selected);
