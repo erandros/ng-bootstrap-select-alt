@@ -29,7 +29,7 @@
             restrict: "E",
             scope: {
                 'output':  '=?bsSelect',
-                'source': '=?bsSource',
+                'src': '=?bsSrc',
                 'config': '=?bsConfig',
                 'config.allowNoSelection': '=?bsAllowNoSelection',
                 'config.multiple': '=?bsMultiple',
@@ -53,137 +53,135 @@
             var vm = this;
             defaultConfig();
             $scope.options = {};
-            $scope.src = undefined;
-            var srcWatch, optionClick, _addOption, _removeOption;
-            if ($scope.config.multiple) {
-                $scope.selectedOptions = {};
-                var deselectAll = function() {
-                    var opts = $scope.selectedOptions;
-                    for (var opts in opts) {
-                        if (opts.hasOwnProperty(opt)) {
-                            opt.toggle(false);
-                        }
+            $scope.selected = {};
+            var deselectAll = function() {
+                var opts = $scope.selected;
+                for (var opts in opts) {
+                    if (opts.hasOwnProperty(opt)) {
+                        opt.toggle(false);
                     }
-                    $scope.selectedOptions = {};
                 }
-                function srcArrayToObject(array) {
-                    var obj = {};
-                    var length = array.length;
-                    for (var i = 0; i < length; i++) {
-                        var el = array[i];
-                        var keyVal = vm.keyValue(el);
-                        if (obj.hasOwnProperty(keyVal))
-                            throw new Error('Found duplicate key in bsSrc: ' + keyVal);
-                        obj[keyVal] = el;
+                $scope.selected = {};
+            }
+            function srcArrayToObject(array) {
+                var obj = {};
+                var length = array.length;
+                for (var i = 0; i < length; i++) {
+                    var el = array[i];
+                    var keyVal = vm.keyValue(el);
+                    if (obj.hasOwnProperty(keyVal))
+                        throw new Error('Found duplicate key in bsSrc: ' + keyVal);
+                    obj[keyVal] = el;
+                }
+                $scope.srcObject = obj;
+            }
+            var checkOptionsFromSrc = function() {
+                $scope.src.forEach(function(obj) {
+                    var keyValue = vm.keyValue(obj);
+                    var option = $scope.options[keyValue];
+                    if (option) {
+                        $scope.selected[keyValue] = option;
+                        option.toggle(true);
                     }
-                    $scope.srcObject = obj;
-                }
-                var checkOptionsFromSrc = function() {
-                    $scope.src.forEach(function(obj) {
-                        var keyValue = vm.keyValue(obj);
-                        var option = $scope.options[keyValue];
-                        if (option) {
-                            $scope.selectedOptions[keyValue] = option;
-                            option.toggle(true);
-                        }
-                    })
-                }
-                srcWatch = function(newVal, oldVal) {
+                })
+            }
+            $scope.$watch('src', function(newVal, oldVal) {
+                if (newVal === undefined && oldVal === undefined) return;
+                if ($scope.config.multiple) {
                     if (!(newVal instanceof Array)) {
                         throw new Error(
-                            'In multiple mode, bsSource should be an array, but it is: ' + newVal);
+                            'In multiple mode, bsSrc should be an array, but it is: ' + newVal);
                     }
                     deselectAll();
                     srcArrayToObject();
                     checkOptions();
                 }
-                function isOptionSelected(bsOption) {
-                    return $scope.selectedOptions[bsOption.keyValue()] !== undefined;
-                }
-                function select(bsOption) {
-                    bsOption.toggle(true);
-                    $scope.selectedOptions[bsOption.keyValue()] = bsOption;
-                }
-                function deselect(bsOption) {
-                    bsOption.toggle(false);
-                    delete $scope.selectedOptions[bsOption.keyValue()];
-                }
-                optionClick = function(bsOption) {
-                    if (isOptionSelected(bsOption)) {
-                        if ($scope.config.allowNoSelection) {
-                            deselect(bsOption);
-                        }
-                    }
-                    else select(bsOption);
-                }
-                _addOption = function(bsOption) {
-                    var key = bsOption.keyValue();
-                    if ($scope.srcObject.hasOwnProperty(key)) {
-                        $scope.selectedOptions[key] = bsOption;
-                    }
-                }
-                _removeOption = function(bsOption) {
-                    var key = bsOption.keyValue()
-                    if ($scope.selectedOptions.hasOwnProperty(key)) {
-                        delete $scope.selectedOptions[key];
-                    }
-                }
-            }
-            else {
-                $scope.selectedOption;
-                function select(bsOption) {
-                    bsOption.toggle(true);
-                    $scope.selectedOption = bsOption;
-                }
-                function delect() {
-                    $scope.selectedOption.toggle(false);
-                    $scope.selectedOption = undefined;
-                }
-                function anySelected() {
-                    return $scope.selectedOption !== undefined;
-                }
-                srcWatch = function(newVal, oldVal) {
-                    if ($scope.selectedOption !== undefined) {
-                        deselect($scope.selectedOption);
+                else {
+                    if ($scope.selected !== undefined) {
+                        vm.deselect($scope.selected);
                     }
                     if (newVal !== undefined) {
                         var key = vm.keyValue(newVal);
                         var option = $scope.options[key];
                         if (option !== undefined)
-                            select(option);
+                            vm.select(option);
                     }
                 }
-                optionClick = function(bsOption) {
-                    if (bsOption.keyValue())
-                }
-                _addOption = function(bsOption) {
-                    if (anySelected()) return;
-                    var key = bsOption.keyValue();
-                    if (vm.keyValue($scope.src) == bsOption.keyValue()) {
-                        $scope.selectedOption = bsOption;
+            });
+            vm.optionClick = function(bsOption) {
+                if ($scope.config.multiple) {
+                    if (isOptionSelected(bsOption)) {
+                        if ($scope.config.allowNoSelection) {
+                            vm.deselect(bsOption);
+                        }
                     }
+                    else vm.select(bsOption);
                 }
-                _removeOption = function(bsOption) {
-                    if (anySelected() && $scope.selectedOption == bsOption) {
-                        deselect();
-                    }
+                else {
                 }
             }
-            $scope.$watch('src', sourceWatch);
-            vm.optionClick = optionClick;
+            vm.isOptionSelected = function(bsOption) {
+                if ($scope.config.multiple) {
+                    return $scope.selected[bsOption.keyValue()] !== undefined;
+                }
+                else {
+                    return $scope.selected !== undefined;
+                }
+            }
             vm.addOption = function(bsOption) {
                 var key = bsOption.keyValue();
                 if ($scope.options.hasOwnProperty(key))
                     throw new Error('Tried to add option with duplicate key: ' + key);
                 $scope.options[key] = bsOption;
-                _addOption(bsOption)
+                if ($scope.config.multiple) {
+                    var key = bsOption.keyValue();
+                    if ($scope.srcObject.hasOwnProperty(key)) {
+                        $scope.selected[key] = bsOption;
+                    }
+                }
+                else {
+                    if (anySelected()) return;
+                    if (vm.keyValue($scope.src) == bsOption.keyValue()) {
+                        $scope.selected = bsOption;
+                    }
+                }
+            }
+            vm.select = function(bsOption) {
+                if ($scope.config.multiple) {
+                    bsOption.toggle(true);
+                    $scope.selected[bsOption.keyValue()] = bsOption;
+                }
+                else {
+                    bsOption.toggle(true);
+                    $scope.selected = bsOption;
+                }
+            }
+            vm.deselect = function(bsOption) {
+                if ($scope.config.multiple) {
+                    bsOption.toggle(false);
+                    delete $scope.selected[bsOption.keyValue()];
+                }
+                else {
+                    $scope.selected.toggle(false);
+                    $scope.selected = undefined;
+                }
             }
             vm.removeOption = function(bsOption) {
                 var key = bsOption.keyValue();
                     if (!$scope.options.hasOwnProperty(key))
                         throw new Error('Tried to remove non existing option of key: ' + key);
                 delete $scope.options[key];
-                _removeOption(bsOption);
+                if ($scope.config.multiple) {
+                    var key = bsOption.keyValue()
+                    if ($scope.selected.hasOwnProperty(key)) {
+                        delete $scope.selected[key];
+                    }
+                }
+                else {
+                    if (anySelected() && $scope.selected == bsOption) {
+                        vm.deselect();
+                    }
+                }
             }
             vm.keyValue = function(obj) {
                 return ($scope.config.keyName
@@ -227,7 +225,7 @@
                 $scope.config = config;
             }
         }
-    }]
+    }])
     .directive('bsOption', [function() {
         var template = ' \
             <a ng-click="click()"> \
