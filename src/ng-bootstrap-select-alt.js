@@ -28,7 +28,8 @@
             transclude: true,
             restrict: "E",
             scope: {
-                'model':  '=?bsModel',
+                'output':  '=?bsSelect',
+                'source': '=?bsSource',
                 'config': '=?bsConfig',
                 'config.allowNoSelection': '=?bsAllowNoSelection',
                 'config.multiple': '=?bsMultiple',
@@ -36,7 +37,7 @@
                 'config.selectedMessageFn': '=?bsSelectedMessageFn',
                 'config.label': '@?bsLabelField',
                 'config.labelFn': '=?bsLabelFn',
-                'config.keyName': '@?keyName'
+                'config.keyName': '@?keyName',
             },
             controller: ['$scope', BsSelectCtrl]
         }
@@ -47,103 +48,147 @@
             scope.toggleDropdown = function() {
                 element.toggleClass('open');
             }
-            // scope.$watchCollection('options', function(newVal, oldVal) {
-            //     ul.empty();
-            //     scope.options.map(function(option) {
-            //         ul.append($compile('<div>' + option.template + '<div>')(scope));
-            //         return option;
-            //     })
-            // });
         }
         function BsSelectCtrl($scope) {
             var vm = this;
             defaultConfig();
             $scope.options = {};
-            $scope.$watchCollection('options', function(newVal, oldVal) {
-                vm.refresh();
-            });
-            $scope.$watch('model', function(newVal, oldVal) {
+            $scope.selected = {};
+            var deselectAll = function() {
+                var opts = $scope.selected;
+                for (var opts in opts) {
+                    if (opts.hasOwnProperty(opt)) {
+                        opt.toggle(false);
+                    }
+                }
+                $scope.selected = {};
+            }
+            function srcArrayToObject(array) {
+                var obj = {};
+                var length = array.length;
+                for (var i = 0; i < length; i++) {
+                    var el = array[i];
+                    var keyVal = vm.keyValue(el);
+                    if (obj.hasOwnProperty(keyVal))
+                        throw new Error('Found duplicate key in bsSrc: ' + keyVal);
+                    obj[keyVal] = el;
+                }
+                $scope.srcObject = obj;
+            }
+            var checkOptionsFromSrc = function() {
+                $scope.src.forEach(function(obj) {
+                    var keyValue = vm.keyValue(obj);
+                    var option = $scope.options[keyValue];
+                    if (option) {
+                        $scope.selected[keyValue] = option;
+                        option.toggle(true);
+                    }
+                })
+            }
+            $scope.$watch('src', function(newVal, oldVal) {
                 if ($scope.config.multiple) {
                     if (!(newVal instanceof Array)) {
-                        throw new Error('In multiple mode, bsModel should be an array, but it is: ' + newVal);
+                        throw new Error(
+                            'In multiple mode, bsSource should be an array, but it is: ' + newVal);
+                    }
+                    deselectAll();
+                    srcArrayToObject();
+                    checkOptions();
+                }
+                else {
+                    if ($scope.selected !== undefined) {
+                        deselect($scope.selected);
+                    }
+                    if (newVal !== undefined) {
+                        var key = vm.keyValue(newVal);
+                        var option = $scope.options[key];
+                        if (option !== undefined)
+                            select(option);
+                    }
+                }
+                }
+            });
+            vm.optionClick = function(bsOption) {
+                if ($scope.config.multiple) {
+                    if (isOptionSelected(bsOption)) {
+                        if ($scope.config.allowNoSelection) {
+                            deselect(bsOption);
+                        }
+                    }
+                    else select(bsOption);
+                }
+                else {
+                }
+            }
+            vm.isOptionSelected = function(bsOption) {
+                if ($scope.config.multiple) {
+                    return $scope.selected[bsOption.keyValue()] !== undefined;
+                }
+                else {
+                    return $scope.selected !== undefined;
+                }
+            }
+            vm.addOption = function(bsOption) {
+                var key = bsOption.keyValue();
+                if ($scope.options.hasOwnProperty(key))
+                    throw new Error('Tried to add option with duplicate key: ' + key);
+                $scope.options[key] = bsOption;
+                if ($scope.config.multiple) {
+                    var key = bsOption.keyValue();
+                    if ($scope.srcObject.hasOwnProperty(key)) {
+                        $scope.selected[key] = bsOption;
                     }
                 }
                 else {
-                    if (!(newVal instanceof Array)) {
-                        throw new Error('While not in multiple mode, bsModel should\'nt be an array, but it is: ' + newVal);
+                    if (anySelected()) return;
+                    if (vm.keyValue($scope.src) == bsOption.keyValue()) {
+                        $scope.selected = bsOption;
                     }
-                    vm.render();
                 }
-            })
-            if ($scope.config.multiple) {
-                $scope.$watchCollection('model', function(newVal, oldVal) {
-                    vm.render();
-                });
             }
-            vm.addOption = function(bsOption) {
-                var key = vm.key(bsOption.data());
-                if ($scope.options.hasOwnProperty(key))
-                    throw new Error('Duplicate key: ' + key);
-                $scope.options[key] = bsOption;
+            vm.select = function(bsOption) {
+                if ($scope.config.multiple) {
+                    bsOption.toggle(true);
+                    $scope.selected[bsOption.keyValue()] = bsOption;
+                }
+                else {
+                    bsOption.toggle(true);
+                    $scope.selected = bsOption;
+                }
+            }
+            vm.deselect = function(bsOption) {
+                if ($scope.config.multiple) {
+                    bsOption.toggle(false);
+                    delete $scope.selected[bsOption.keyValue()];
+                }
+                else {
+                    $scope.selected.toggle(false);
+                    $scope.selected = undefined;
+                }
             }
             vm.removeOption = function(bsOption) {
-                var key = vm.key(bsOption.data());
+                var key = bsOption.keyValue();
+                    if (!$scope.options.hasOwnProperty(key))
+                        throw new Error('Tried to remove non existing option of key: ' + key);
                 delete $scope.options[key];
+                if ($scope.config.multiple) {
+                    var key = bsOption.keyValue()
+                    if ($scope.selected.hasOwnProperty(key)) {
+                        delete $scope.selected[key];
+                    }
+                }
+                else {
+                    if (anySelected() && $scope.selected == bsOption) {
+                        deselect();
+                    }
+                }
             }
-            vm.key = function(obj) {
+            vm.keyValue = function(obj) {
                 return ($scope.config.keyName
                     ? obj[$scope.config.keyName]
                     : obj)
             }
-            function setSelection(obj) {
-                var key = vm.key(obj);
-                if ($scope.options[key].isSelected()) throw new Error('Duplicate key in bsModel: ' + key);
-                $scope.options[key].toggle(true);
-            }
-            function unmarkOptions() {
-                for (var opt in $scope.options) {
-                    if( obj.hasOwnProperty(p) ) {
-                        opt.toggle(false);
-                    } 
-                }
-            }
-            vm.render = function() {
-                if ($scope.model === undefined) return;
-                unmarkOptions();
-                if ($scope.config.multiple) {
-                    var length = $scope.model.length;
-                    for (var i = 0; i < ) {
-                        setSelection($scope.model[i])
-                    }
-                }
-                else {
-                    setSelection($scope.model);
-                }
-            }
-            vm.isSelected = function(obj) {
-                var key = vm.key(obj);
-                $scope.model
-            }
-            vm.optionClick = function(bsOption) {
-                if ($scope.config.multiple) {
 
-                } else {
-                    if ($scope.model == bsOption.data()) {
-
-                    }
-                }
-                if () {
-
-                }
-            }
-            $scope.anySelected = function() {
-                if ($scope.config.multiple) {
-                    return $scope.model.length > 0
-                }
-                else {
-                    return $scope.model !== undefined;
-                }
-            }
             function defaultConfig() {
                 var config = $scope.config || {};
 
@@ -180,7 +225,7 @@
                 $scope.config = config;
             }
         }
-    }])
+    }]
     .directive('bsOption', [function() {
         var template = ' \
             <a ng-click="click()"> \
@@ -222,6 +267,9 @@
             }
             vm.data = function() {
                 return $scope.data;
+            }
+            vm.keyValue = function() {
+                return scope.bsSelect.keyValue(vm.data());
             }
             $scope.click = function() {
                 $scope.bsSelect.optionClick(vm);
