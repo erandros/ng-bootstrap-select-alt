@@ -190,7 +190,8 @@
     &lt;bs-select bs-output="sfChar">
         &lt;bs-label>
           &lt;img ng-src="images/{{sfChar}}.gif">&lt;/img>
-           {{ sfChar ? sfChar : '(Nothing selected)' }} &lt;/bs-label>
+          {{ sfChar ? sfChar : '(Nothing selected)' }} 
+        &lt;/bs-label>
         &lt;ul>
             &lt;li ng-repeat="char in sfChars track by char" 
                 bs-option="char"> 
