@@ -11,24 +11,19 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
     <link rel="stylesheet" type="text/css" href="stylesheets/sunburst.css" media="print">
     <link rel="stylesheet" type="text/css" href="src/bootstrap-select-alt.css">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-cookies.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
     <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=sunburst""></script>
-
     <script src="./src/ng-bootstrap-select-alt.js"></script>
     <script src="./javascripts/main.js"></script>
-
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
     <title>ng-bootstrap-select-alt by erandros</title>
   </head>
-
   <body ng-app='ghPage'>
     <header>
       <div class="inner">
@@ -37,189 +32,173 @@
         <a href="https://github.com/erandros/ng-bootstrap-select-alt" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
-
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content" ng-controller="ctrl">
           <h3>
-                    <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is this?
-                 </h3>
-                 <p>This is a a library to generate bootstrap dropdowns (or select's) based on bootstrap-select for angular.</p>
-                 <h3>
-                    <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why? There are many libraries like this already.
-                 </h3>
-                 <p>Yes, but I don't really dig the already existing ones.</p>
-                <h3>
-                    <aclass="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>You can pretty much do anything with it
-                 </h3>
-                <my-code>
-&lt;div ng-init="sfChars = ['adon', 'birdie', 'chun-li', 'dan', 'gouki', 'guy', 'ken', 
-    'nash', 'rose', 'ryu', 'sagat', 'sodom', 'vega']">
-    &lt;p>
-        Select Street Fighter character: {{ sfChar }}
-    &lt;/p>
-    &lt;bs-select bs-output="sfChar">
-        &lt;bs-label>
-          &lt;img ng-src="images/{{sfChar}}.gif">&lt;/img>
-          {{ sfChar ? sfChar : '(Nothing selected)' }} 
-        &lt;/bs-label>
-        &lt;ul>
-            &lt;li ng-repeat="char in sfChars track by char" 
-                bs-option="char"> 
-                &lt;img ng-src="images/{{char}}.gif">
-                &lt;/img>
-                {{ char }}
-            &lt;/li>
-        &lt;/ul>
-    &lt;/bs-select>
+            <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is this?
+          </h3>
+          <p>This is a a library to generate bootstrap dropdowns (or select's) based on bootstrap-select for angular.</p>
+          <h3>
+            <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why? There are many libraries like this already.
+          </h3>
+          <p>Yes, but I don't really dig the already existing ones.</p>
+          <h3>
+            <aclass="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>You can pretty much do anything with it
+          </h3>
+          <my-code>
+&lt;div ng-init="sfChars = ['adon', 'birdie', 'chun-li', 'dan', 'gouki', 'guy', 'ken', 'nash', 'rose', 'ryu', 'sagat', 'sodom', 'vega']">
+  &lt;p>
+    Select Street Fighter character: {{ sfChar }}
+  &lt;/p>
+  &lt;bs-select bs-output="sfChar">
+    &lt;bs-label>
+      &lt;img ng-src="images/{{sfChar}}.gif">&lt;/img>
+      {{ sfChar ? sfChar : '(Nothing selected)' }} 
+    &lt;/bs-label>
+    &lt;ul>
+      &lt;li ng-repeat="char in sfChars track by char" 
+      bs-option="char"> 
+        &lt;img ng-src="images/{{char}}.gif">
+        &lt;/img>
+        {{ char }}
+      &lt;/li>
+    &lt;/ul>
+  &lt;/bs-select>
 &lt;/div>
-                </my-code>
-                 <h3>
-                    <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features
-                 </h3>
-                 <h2>
-                    <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Single select
-                 </h2>
-<my-code>
+          </my-code>
+          <h3>
+            <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features
+          </h3>
+          <h2>
+            <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Single select
+          </h2>
+          <my-code>
 &lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
-    &lt;p>
-        Selected brands: {{ singleBrands }}
-    &lt;/p>
-    &lt;bs-select bs-output="singleBrands">
-        &lt;ul>
-            &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">{{ brand }}
-            &lt;/li>
-        &lt;/ul>
-    &lt;/bs-select>
+  &lt;p>
+    Selected brands: {{ singleBrands }}
+  &lt;/p>
+  &lt;bs-select bs-output="singleBrands">
+    &lt;ul>
+      &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">
+        {{ brand }}
+      &lt;/li>
+    &lt;/ul>
+  &lt;/bs-select>
 &lt;/div>
-                </my-code>
-                 <h2>
-                    <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Allow no selection
-                 </h2>
-<my-code>
+          </my-code>
+          <h2>
+            <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Allow no selection
+          </h2>
+          <my-code>
 &lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
-    &lt;p>
-        Selected brands: {{ noSelBrands }}
-    &lt;/p>
-    &lt;bs-select bs-output="noSelBrands" bs-allow-no-selection="true">
-        &lt;ul>
-            &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">{{ brand }}
-            &lt;/li>
-        &lt;/ul>
-    &lt;/bs-select>
+  &lt;p>
+    Selected brands: {{ noSelBrands }}
+  &lt;/p>
+  &lt;bs-select bs-output="noSelBrands" bs-allow-no-selection="true">
+    &lt;ul>
+      &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">
+        {{ brand }}
+      &lt;/li>
+    &lt;/ul>
+  &lt;/bs-select>
 &lt;/div>
-                </my-code>
-                 <h2>
-                    <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Multi select
-                 </h2>
-                <my-code>
+          </my-code>
+          <h2>
+            <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Multi select
+          </h2>
+          <my-code>
 &lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
-    &lt;p>
-        Selected brands: {{ multiBrands }}
-    &lt;/p>
-    &lt;bs-select bs-output="multiBrands" bs-multiple="true">
-        &lt;ul>
-            &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">{{ brand }}
-            &lt;/li>
-        &lt;/ul>
-    &lt;/bs-select>
+  &lt;p>
+  Selected brands: {{ multiBrands }}
+  &lt;/p>
+  &lt;bs-select bs-output="multiBrands" bs-multiple="true">
+    &lt;ul>
+      &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">
+        {{ brand }}
+      &lt;/li>
+    &lt;/ul>
+  &lt;/bs-select>
 &lt;/div>
-                </my-code>
-
-                <h2>
-                    <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Custom labels
-                 </h2>
-                <my-code>
+          </my-code>
+          <h2>
+            <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Custom labels
+          </h2>
+          <my-code>
+&lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
+  &lt;p>
+    Selected brands: {{ customLabelBrands }}
+  &lt;/p>
+  &lt;bs-select bs-output="customLabelBrands" bs-multiple="true">
+    &lt;bs-label> 
+      {{ customLabelBrands.length ? customLabelBrands.length + ' brands selected.' : '(No brands selected)' }} 
+    &lt;/bs-label>
+    &lt;ul>
+      &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">
+        {{ brand }}
+      &lt;/li>
+    &lt;/ul>
+  &lt;/bs-select>
+&lt;/div>
+          </my-code>
+          <h2>
+            <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Unselectable options
+          </h2>
+          <my-code>
+&lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
+  &lt;p>
+    Selected brands: {{ unselectBrands }}
+  &lt;/p>
+  &lt;bs-select bs-output="unselectBrands">
+    &lt;ul>
+      &lt;li bs-option bs-selectable="false">Create new &lt;/li>
+      &lt;li class="divider">&lt;/li>
+      &lt;li ng-repeat="brand in brands track by brand" 
+      bs-option="brand">{{ brand }}
+      &lt;/li>
+    &lt;/ul>
+  &lt;/bs-select>
+&lt;/div>
+          </my-code>
+          <h2>
+            <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Select first option
+          </h2>
+          <my-code>
 &lt;script type="text/javascript-lazy">
-    //IM INJECTING $scope GLOBALLY FOR THIS TO WORK, DON'T DO THAT
-    $scope.labelFn = function(model) {
-        return model.length + ' brands selected.'
-    }
+//IM INJECTING $scope GLOBALLY FOR THIS TO WORK, DON'T DO THAT
+$scope.labelFn = function(model) {
+return model.length + ' brands selected.'
+}
 &lt;/script>
 &lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
-    &lt;p>
-        Selected brands: {{ customLabelBrand }}
-    &lt;/p>
-    &lt;bs-select bs-output="customLabelBrand" bs-empty-message="(No brands selected)" bs-selected-message-fn="labelFn">
-        &lt;bs-label> {{ customLabelBrand ? customLabelBrand : '(Nothing selected)' }} &lt;/bs-label>
-        &lt;ul>
-            &lt;li ng-repeat="brand in brands track by brand" 
-                bs-option="brand">{{ brand }}
-            &lt;/li>
-        &lt;/ul>
-    &lt;/bs-select>
+&lt;p>
+Selected brands: {{ firstOptBrands }}
+&lt;/p>
+&lt;bs-select bs-output="firstOptBrands" bs-select-first-option="true">
+&lt;ul>
+&lt;li bs-option bs-selectable="false">Create new &lt;/li>
+&lt;li class="divider">&lt;/li>
+&lt;li ng-repeat="brand in brands track by brand" 
+bs-option="brand">{{ brand }}
+&lt;/li>
+&lt;/ul>
+&lt;/bs-select>
 &lt;/div>
-                </my-code>
-
-                <h2>
-                    <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Unselectable options
-                 </h2>
-                <my-code>
-&lt;script type="text/javascript-lazy">
-    //IM INJECTING $scope GLOBALLY FOR THIS TO WORK, DON'T DO THAT
-    $scope.labelFn = function(model) {
-        return model.length + ' brands selected.'
-    }
-&lt;/script>
-&lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
-    &lt;p>
-        Selected brands: {{ unselectBrands }}
-    &lt;/p>
-    &lt;bs-select bs-output="unselectBrands">
-        &lt;ul>
-            &lt;li bs-option bs-selectable="false">Create new &lt;/li>
-            &lt;li class="divider">&lt;/li>
-            &lt;li ng-repeat="brand in brands track by brand" 
-                bs-option="brand">{{ brand }}
-            &lt;/li>
-        &lt;/ul>
-    &lt;/bs-select>
-&lt;/div>
-                </my-code>
-
-                <h2>
-                    <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Select first option
-                 </h2>
-                <my-code>
-&lt;script type="text/javascript-lazy">
-    //IM INJECTING $scope GLOBALLY FOR THIS TO WORK, DON'T DO THAT
-    $scope.labelFn = function(model) {
-        return model.length + ' brands selected.'
-    }
-&lt;/script>
-&lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
-    &lt;p>
-        Selected brands: {{ firstOptBrands }}
-    &lt;/p>
-    &lt;bs-select bs-output="firstOptBrands" bs-select-first-option="true">
-        &lt;ul>
-            &lt;li bs-option bs-selectable="false">Create new &lt;/li>
-            &lt;li class="divider">&lt;/li>
-            &lt;li ng-repeat="brand in brands track by brand" 
-                bs-option="brand">{{ brand }}
-            &lt;/li>
-        &lt;/ul>
-    &lt;/bs-select>
-&lt;/div>
-                </my-code>
-          </section>
+          </my-code>
+        </section>
         <aside id="sidebar">
           <a href="https://github.com/erandros/ng-bootstrap-select-alt/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
+          <small>Download</small>
+          .zip file
           </a>
           <a href="https://github.com/erandros/ng-bootstrap-select-alt/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
+          <small>Download</small>
+          .tar.gz file
           </a>
-
           <p class="repo-owner"><a href="https://github.com/erandros/ng-bootstrap-select-alt"></a> is maintained by <a href="https://github.com/erandros">erandros</a>.</p>
-
           <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
         </aside>
       </div>
     </div>
-
-  
   </body>
 </html>
