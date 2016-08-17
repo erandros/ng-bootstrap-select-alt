@@ -322,6 +322,7 @@
                 return $scope.bsSelect.keyValue(vm.data());
             }
             $scope.click = function() {
+                if (!$scope.selectable) return;
                 $scope.bsSelect.optionClick(vm);
             }
         }
