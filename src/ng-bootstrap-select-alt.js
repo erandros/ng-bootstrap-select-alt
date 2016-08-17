@@ -36,6 +36,7 @@
                 'config': '=?bsConfig',
                 'config.allowNoSelection': '=?bsAllowNoSelection',
                 'config.selectFirstOption': '=?bsSelectFirstOption',
+                'config.disableCheckmark': '=?bsDisableCheckmark',
                 'config.multiple': '=?bsMultiple',
                 'config.emptyMessage': '@?bsEmptyMessage',
                 'config.selectedMessageFn': '=?bsSelectedMessageFn',
@@ -265,6 +266,9 @@
                     ? obj[$scope.config.keyName]
                     : obj)
             }
+            vm.config = function() {
+                return $scope.config;
+            }
 
             function defaultConfig() {
                 var config = $scope.config || {};
@@ -277,6 +281,9 @@
                 if (config.allowNoSelection == null) {
                     config.allowNoSelection = config.multiple;
                 }
+
+                config.disableCheckmark = config.disableCheckmark || 
+                    $scope["config.disableCheckmark"] || false;
 
                 config.selectFirstOption = config.selectFirstOption ||
                     $scope["config.selectFirstOption"] || false;
@@ -312,7 +319,7 @@
         var template = ' \
             <a ng-click="click()"> \
                 <span class="text" ng-transclude></span> \
-                <span class="glyphicon glyphicon-ok check-mark"></span> \
+                <span class="glyphicon glyphicon-ok check-mark" ng-if="!disableCheckmark"></span> \
             </a> \
         ';
         return {
@@ -331,6 +338,7 @@
             var bsSelect = ctrls[0];
             var bsOption = ctrls[1];
             scope.bsSelect = bsSelect;
+            scope.disableCheckmark = bsSelect.config().disableCheckmark;
             scope.el = element;
             if (scope.data !== undefined && scope.selectable !== false) {
                 bsSelect.addOption(bsOption);   
