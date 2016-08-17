@@ -11,21 +11,24 @@
             title="Mustard" \
             aria-expanded="false" \
             ng-click="toggleDropdown()"> \
-            <span class="filter-option pull-left"> \
+            <span class="filter-option pull-left" ng-transclude="label"> \
                 {{ anySelected() ? selectedMessage() : config.emptyMessage }} \
             </span>&nbsp; \
             <span class="bs-caret"> \
                 <span class="caret"></span> \
             </span> \
         </button> \
-        <div class="dropdown-menu open" ng-transclude> \
+        <div class="dropdown-menu open" ng-transclude="ul"> \
         </div> \
         ';
 
         return {
             link: link,
             template: template,
-            transclude: true,
+            transclude: {
+                'ul': '?ul',
+                'label': '?bsLabel'
+            },
             restrict: "E",
             scope: {
                 'selectedOutput':  '=?bsOutput',
