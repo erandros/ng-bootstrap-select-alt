@@ -178,6 +178,32 @@
   &lt;/bs-select>
 &lt;/div>
           </my-code>
+          <h2>
+            <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Custom selected css
+          </h2>
+          <my-code>
+&lt;style>
+    .custom-css .dropdown-menu.inner li a {
+      transition: background-color 0.5s ease;
+    }
+    .custom-css .dropdown-menu.inner li.selected a {
+      background-color: rgba(0, 128, 0, 0.18);
+    }
+&lt;/style>
+&lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
+  &lt;p>
+    Selected brands: {{ customCssBrands }}
+  &lt;/p>
+  &lt;bs-select class='custom-css' bs-output="customCssBrands" bs-disable-checkmark="true">
+    &lt;ul>
+      &lt;li ng-repeat="brand in brands track by brand" 
+      bs-option="brand">
+        {{ brand }}
+      &lt;/li>
+    &lt;/ul>
+  &lt;/bs-select>
+&lt;/div>
+          </my-code>
         </section>
         <aside id="sidebar">
           <a href="https://github.com/erandros/ng-bootstrap-select-alt/zipball/master" class="button">
