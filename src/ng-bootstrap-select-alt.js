@@ -29,7 +29,7 @@
             restrict: "E",
             scope: {
                 'output':  '=?bsSelect',
-                'source': '=?bsSource',
+                'src': '=?bsSrc',
                 'config': '=?bsConfig',
                 'config.allowNoSelection': '=?bsAllowNoSelection',
                 'config.multiple': '=?bsMultiple',
@@ -86,10 +86,11 @@
                 })
             }
             $scope.$watch('src', function(newVal, oldVal) {
+                if (newVal === undefined && oldVal === undefined) return;
                 if ($scope.config.multiple) {
                     if (!(newVal instanceof Array)) {
                         throw new Error(
-                            'In multiple mode, bsSource should be an array, but it is: ' + newVal);
+                            'In multiple mode, bsSrc should be an array, but it is: ' + newVal);
                     }
                     deselectAll();
                     srcArrayToObject();
@@ -97,25 +98,24 @@
                 }
                 else {
                     if ($scope.selected !== undefined) {
-                        deselect($scope.selected);
+                        vm.deselect($scope.selected);
                     }
                     if (newVal !== undefined) {
                         var key = vm.keyValue(newVal);
                         var option = $scope.options[key];
                         if (option !== undefined)
-                            select(option);
+                            vm.select(option);
                     }
-                }
                 }
             });
             vm.optionClick = function(bsOption) {
                 if ($scope.config.multiple) {
                     if (isOptionSelected(bsOption)) {
                         if ($scope.config.allowNoSelection) {
-                            deselect(bsOption);
+                            vm.deselect(bsOption);
                         }
                     }
-                    else select(bsOption);
+                    else vm.select(bsOption);
                 }
                 else {
                 }
@@ -179,7 +179,7 @@
                 }
                 else {
                     if (anySelected() && $scope.selected == bsOption) {
-                        deselect();
+                        vm.deselect();
                     }
                 }
             }
@@ -225,7 +225,7 @@
                 $scope.config = config;
             }
         }
-    }]
+    }])
     .directive('bsOption', [function() {
         var template = ' \
             <a ng-click="click()"> \
