@@ -28,10 +28,11 @@
             transclude: true,
             restrict: "E",
             scope: {
-                'selected':  '=?bsSelect',
+                'selectedOutput':  '=?bsOutput',
                 'src': '=?bsSrc',
                 'config': '=?bsConfig',
                 'config.allowNoSelection': '=?bsAllowNoSelection',
+                'config.selectFirstOption': '=?bsSelectFirstOption',
                 'config.multiple': '=?bsMultiple',
                 'config.emptyMessage': '@?bsEmptyMessage',
                 'config.selectedMessageFn': '=?bsSelectedMessageFn',
@@ -102,6 +103,23 @@
                     }
                 })
             }
+            if ($scope.config.multiple) {
+                $scope.$watchCollection('selected', function(newVal, oldVal) {
+                    if (newVal === undefined && oldVal === undefined) return;
+                    $scope.selectedOutput = Object.keys($scope.selected).map(function(key) {
+                        return $scope.selected[key].data();
+                    })
+                });
+            }
+            else {
+                $scope.$watch('selected', function(newVal, oldVal) {
+                    if (newVal === undefined && oldVal === undefined) return;
+                    if ($scope.selected === undefined)
+                        $scope.selectedOutput = undefined;
+                    else $scope.selectedOutput = $scope.selected.data();
+                })
+            }
+            
             $scope.$watch('src', function(newVal, oldVal) {
                 if (newVal === undefined && oldVal === undefined) return;
                 if ($scope.config.multiple) {
@@ -183,15 +201,22 @@
                     throw new Error('Tried to add option with duplicate key: ' + key);
                 $scope.options[key] = bsOption;
                 if ($scope.config.multiple) {
+                    if ($scope.srcObject == null) return;
+                    if (Object.keys($scope.selected).length == 0 && $scope.config.selectFirstOption) {
+                        vm.select(bsOption);
+                    }
                     var key = bsOption.keyValue();
                     if ($scope.srcObject.hasOwnProperty(key)) {
-                        $scope.selected[key] = bsOption;
+                        vm.select(bsOption);
                     }
                 }
                 else {
-                    if (anySelected()) return;
-                    if (vm.keyValue($scope.src) == bsOption.keyValue()) {
-                        $scope.selected = bsOption;
+                    if ($scope.anySelected()) return;
+                    if ($scope.selected == null && $scope.config.selectFirstOption) {
+                        vm.select(bsOption);
+                    }
+                    else if (vm.keyValue($scope.src) == bsOption.keyValue()) {
+                        vm.select(bsOption);
                     }
                 }
             }
@@ -241,13 +266,17 @@
             function defaultConfig() {
                 var config = $scope.config || {};
 
-                config.allowNoSelection = config.allowNoSelection || 
-                    $scope["config.allowNoSelection"];
-                if (config.allowNoSelection == null)
-                    config.allowNoSelection = true;
-
                 config.multiple = config.multiple || 
                     $scope["config.multiple"] || false;
+
+                config.allowNoSelection = config.allowNoSelection || 
+                    $scope["config.allowNoSelection"];
+                if (config.allowNoSelection == null) {
+                    config.allowNoSelection = config.multiple;
+                }
+
+                config.selectFirstOption = config.selectFirstOption ||
+                    $scope["config.selectFirstOption"] || false;
 
                 if (config.multiple)
                     $scope.model = [];
@@ -298,11 +327,11 @@
         function link(scope, element, attrs, ctrls) {
             var bsSelect = ctrls[0];
             var bsOption = ctrls[1];
-            if ($scope.data !== undefined && $scope.selectable !== false) {
-                bsSelect.addOption(bsOption);   
-            }
             scope.bsSelect = bsSelect;
             scope.el = element;
+            if (scope.data !== undefined && scope.selectable !== false) {
+                bsSelect.addOption(bsOption);   
+            }
         }
         function BsOptionCtrl($scope) {
             var vm = this;
