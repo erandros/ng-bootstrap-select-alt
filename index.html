@@ -133,6 +133,27 @@
 &lt;/div>
                 </my-code>
 
+                <h2>
+                    <aclass="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>You can put anything in here.
+                 </h2>
+                <my-code>
+&lt;div ng-init="sfChars = ['adon', 'birdie', 'chun-li', 'dan', 'gouki', 'guy', 'ken', 
+    'nash', 'rose', 'ryu', 'sagat', 'sodom', 'vega']">
+    &lt;p>
+        Select Street Fighter character: {{ sfChar }}
+    &lt;/p>
+    &lt;bs-select bs-model="sfChar">
+        &lt;ul>
+            &lt;li ng-repeat="char in sfChars track by char" 
+                bs-option="char"> 
+                &lt;img ng-src="images/{{char}}.gif">
+                &lt;/img>
+                {{ char }}
+            &lt;/li>
+        &lt;/ul>
+    &lt;/bs-select>
+&lt;/div>
+                </my-code>
           </section>
         <aside id="sidebar">
           <a href="https://github.com/erandros/ng-bootstrap-select-alt/zipball/master" class="button">
