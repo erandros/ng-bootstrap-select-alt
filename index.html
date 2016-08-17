@@ -60,7 +60,23 @@
     &lt;p>
         Selected brands: {{ singleBrands }}
     &lt;/p>
-    &lt;bs-select bs-model="singleBrands">
+    &lt;bs-select bs-output="singleBrands">
+        &lt;ul>
+            &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">{{ brand }}
+            &lt;/li>
+        &lt;/ul>
+    &lt;/bs-select>
+&lt;/div>
+                </my-code>
+                 <h2>
+                    <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Allow no selection
+                 </h2>
+<my-code>
+&lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
+    &lt;p>
+        Selected brands: {{ noSelBrands }}
+    &lt;/p>
+    &lt;bs-select bs-output="noSelBrands" bs-allow-no-selection="true">
         &lt;ul>
             &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">{{ brand }}
             &lt;/li>
@@ -76,7 +92,7 @@
     &lt;p>
         Selected brands: {{ multiBrands }}
     &lt;/p>
-    &lt;bs-select bs-model="multiBrands" bs-multiple="true">
+    &lt;bs-select bs-output="multiBrands" bs-multiple="true">
         &lt;ul>
             &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">{{ brand }}
             &lt;/li>
@@ -99,7 +115,7 @@
     &lt;p>
         Selected brands: {{ customLabelBrands }}
     &lt;/p>
-    &lt;bs-select bs-model="customLabelBrands" bs-empty-message="(No brands selected)" bs-multiple="true" bs-selected-message-fn="labelFn">
+    &lt;bs-select bs-output="customLabelBrands" bs-empty-message="(No brands selected)" bs-multiple="true" bs-selected-message-fn="labelFn">
         &lt;ul>
             &lt;li ng-repeat="brand in brands track by brand" 
                 bs-option="brand">{{ brand }}
@@ -123,7 +139,33 @@
     &lt;p>
         Selected brands: {{ unselectBrands }}
     &lt;/p>
-    &lt;bs-select bs-model="unselectBrands">
+    &lt;bs-select bs-output="unselectBrands">
+        &lt;ul>
+            &lt;li bs-option bs-selectable="false">Create new &lt;/li>
+            &lt;li class="divider">&lt;/li>
+            &lt;li ng-repeat="brand in brands track by brand" 
+                bs-option="brand">{{ brand }}
+            &lt;/li>
+        &lt;/ul>
+    &lt;/bs-select>
+&lt;/div>
+                </my-code>
+
+                <h2>
+                    <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Select first option
+                 </h2>
+                <my-code>
+&lt;script type="text/javascript-lazy">
+    //IM INJECTING $scope GLOBALLY FOR THIS TO WORK, DON'T DO THAT
+    $scope.labelFn = function(model) {
+        return model.length + ' brands selected.'
+    }
+&lt;/script>
+&lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
+    &lt;p>
+        Selected brands: {{ firstOptBrands }}
+    &lt;/p>
+    &lt;bs-select bs-output="firstOptBrands" bs-select-first-option="true">
         &lt;ul>
             &lt;li bs-option bs-selectable="false">Create new &lt;/li>
             &lt;li class="divider">&lt;/li>
@@ -144,7 +186,7 @@
     &lt;p>
         Select Street Fighter character: {{ sfChar }}
     &lt;/p>
-    &lt;bs-select bs-model="sfChar">
+    &lt;bs-select bs-output="sfChar">
         &lt;ul>
             &lt;li ng-repeat="char in sfChars track by char" 
                 bs-option="char"> 
