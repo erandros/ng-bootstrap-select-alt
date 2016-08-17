@@ -6,6 +6,21 @@
  *    user zoom.
  */
 
+.bootstrap-select.btn-group .dropdown-menu.inner {
+  width: initial;
+}
+
+* {
+  -webkit-box-sizing: initial;
+    -moz-box-sizing: initial;
+    box-sizing: initial;
+}
+bs-select * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 html {
   font-family: sans-serif; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
