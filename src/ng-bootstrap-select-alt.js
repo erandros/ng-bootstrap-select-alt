@@ -4,7 +4,7 @@
 
     angular
     .module('bootstrapSelectAlt', ['ngSanitize'])
-    .directive('bsSelect', ['$compile', function($compile) {
+    .directive('bsSelect', ['$compile', '$document', function($compile, $document) {
         var template = ' \
         <button type="button" \
             class="btn dropdown-toggle btn-default" \
@@ -47,7 +47,19 @@
             element.find('ul').addClass('dropdown-menu inner')
             scope.toggleDropdown = function() {
                 element.toggleClass('open');
+            }            
+            var onClick = function(event) {
+                var isChild = element[0].contains(event.target);
+                var isSelf = element[0] == event.target;
+                var isInside = isChild || isSelf;
+                if (!isInside) {
+                    element.toggleClass('open', false);
+                }
             }
+            $document.bind('click', onClick);
+            scope.$on('$destroy', function() {
+                $document.unbind('click', onClick);
+            })
         }
         function BsSelectCtrl($scope) {
             var vm = this;
@@ -297,7 +309,7 @@
             if ($scope.data !== undefined) {
                 $scope.$on('$destroy', function() {
                     $scope.bsSelect.removeOption(vm);
-                })   
+                });
             }
             if ($scope.selectable !== false) $scope.selectable = true;
             vm.mark = function(selected) {
