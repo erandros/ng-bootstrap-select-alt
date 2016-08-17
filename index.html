@@ -125,6 +125,8 @@
     &lt;/p>
     &lt;bs-select bs-model="unselectBrands">
         &lt;ul>
+            &lt;li bs-option bs-selectable="false">Create new &lt;/li>
+            &lt;li class="divider">&lt;/li>
             &lt;li ng-repeat="brand in brands track by brand" 
                 bs-option="brand">{{ brand }}
             &lt;/li>
