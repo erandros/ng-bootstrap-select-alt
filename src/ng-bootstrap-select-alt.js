@@ -12,7 +12,7 @@
             aria-expanded="false" \
             ng-click="toggleDropdown()"> \
             <span class="filter-option pull-left"> \
-                {{ anySelected() ? config.selectedMessageFn(model) : config.emptyMessage }} \
+                {{ anySelected() ? selectedMessage() : config.emptyMessage }} \
             </span>&nbsp; \
             <span class="bs-caret"> \
                 <span class="caret"></span> \
@@ -28,7 +28,7 @@
             transclude: true,
             restrict: "E",
             scope: {
-                'output':  '=?bsSelect',
+                'selected':  '=?bsSelect',
                 'src': '=?bsSrc',
                 'config': '=?bsConfig',
                 'config.allowNoSelection': '=?bsAllowNoSelection',
@@ -53,12 +53,17 @@
             var vm = this;
             defaultConfig();
             $scope.options = {};
-            $scope.selected = {};
+            if ($scope.config.multiple) {
+                $scope.selected = {};
+            }
+            else {
+                $scope.selected = undefined;
+            }
             var deselectAll = function() {
                 var opts = $scope.selected;
                 for (var opts in opts) {
                     if (opts.hasOwnProperty(opt)) {
-                        opt.toggle(false);
+                        opt.mark(false);
                     }
                 }
                 $scope.selected = {};
@@ -81,7 +86,7 @@
                     var option = $scope.options[keyValue];
                     if (option) {
                         $scope.selected[keyValue] = option;
-                        option.toggle(true);
+                        option.mark(true);
                     }
                 })
             }
@@ -108,16 +113,47 @@
                     }
                 }
             });
+            $scope.selectedMessage = function() {
+                if ($scope.config.multiple) {
+                    var arr = Object.keys($scope.selected).map(function(key) {
+                        return $scope.selected[key].data();
+                    })
+                    return $scope.config.selectedMessageFn(arr);
+                }
+                else {
+                    return $scope.config.selectedMessageFn($scope.selected.data());
+                }
+            }
             vm.optionClick = function(bsOption) {
                 if ($scope.config.multiple) {
-                    if (isOptionSelected(bsOption)) {
-                        if ($scope.config.allowNoSelection) {
-                            vm.deselect(bsOption);
-                        }
+                    if (vm.isOptionSelected(bsOption)) {
+                        if ($scope.selected.length == 1 &&
+                            !$scope.config.allowNoSelection) {}
+                        else vm.deselect(bsOption);
                     }
                     else vm.select(bsOption);
                 }
                 else {
+                    if (vm.isOptionSelected(bsOption)) {
+                        if ($scope.config.allowNoSelection) {
+                            $scope.selected.mark(false);
+                            $scope.selected = undefined;
+                        }
+                    }
+                    else {
+                        if ($scope.selected)
+                            $scope.selected.mark(false);
+                        $scope.selected = bsOption;
+                        bsOption.mark(true);
+                    }
+                }
+            }
+            $scope.anySelected = function() {
+                if ($scope.config.multiple) {
+                    return Object.keys($scope.selected).length > 0;
+                }
+                else {
+                    return $scope.selected !== undefined;
                 }
             }
             vm.isOptionSelected = function(bsOption) {
@@ -125,7 +161,8 @@
                     return $scope.selected[bsOption.keyValue()] !== undefined;
                 }
                 else {
-                    return $scope.selected !== undefined;
+                    return ($scope.selected != null &&
+                        $scope.selected.keyValue() === bsOption.keyValue());
                 }
             }
             vm.addOption = function(bsOption) {
@@ -148,21 +185,21 @@
             }
             vm.select = function(bsOption) {
                 if ($scope.config.multiple) {
-                    bsOption.toggle(true);
+                    bsOption.mark(true);
                     $scope.selected[bsOption.keyValue()] = bsOption;
                 }
                 else {
-                    bsOption.toggle(true);
+                    bsOption.mark(true);
                     $scope.selected = bsOption;
                 }
             }
             vm.deselect = function(bsOption) {
                 if ($scope.config.multiple) {
-                    bsOption.toggle(false);
+                    bsOption.mark(false);
                     delete $scope.selected[bsOption.keyValue()];
                 }
                 else {
-                    $scope.selected.toggle(false);
+                    $scope.selected.mark(false);
                     $scope.selected = undefined;
                 }
             }
@@ -208,8 +245,9 @@
 
                 config.selectedMessageFn = config.selectedMessageFn ||
                     $scope["config.selectedMessageFn"] || 
-                    function() { return config.multiple ?
-                        $scope.model.join(", ") : $scope.model };
+                    function(data) { return $scope.config.multiple
+                        ? data.join(', ')
+                        : data };
 
                 config.key = config.key ||
                     $scope["config.key"];
@@ -230,7 +268,7 @@
         var template = ' \
             <a ng-click="click()"> \
                 <span class="text" ng-transclude></span> \
-                <span ng-if="selected" class="glyphicon glyphicon-ok check-mark"></span> \
+                <span class="glyphicon glyphicon-ok check-mark"></span> \
             </a> \
         ';
         return {
@@ -269,7 +307,7 @@
                 return $scope.data;
             }
             vm.keyValue = function() {
-                return scope.bsSelect.keyValue(vm.data());
+                return $scope.bsSelect.keyValue(vm.data());
             }
             $scope.click = function() {
                 $scope.bsSelect.optionClick(vm);
