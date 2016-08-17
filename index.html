@@ -113,9 +113,10 @@
 &lt;/script>
 &lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
     &lt;p>
-        Selected brands: {{ customLabelBrands }}
+        Selected brands: {{ customLabelBrand }}
     &lt;/p>
-    &lt;bs-select bs-output="customLabelBrands" bs-empty-message="(No brands selected)" bs-multiple="true" bs-selected-message-fn="labelFn">
+    &lt;bs-select bs-output="customLabelBrand" bs-empty-message="(No brands selected)" bs-selected-message-fn="labelFn">
+        &lt;bs-label> {{ customLabelBrand ? customLabelBrand : '(Nothing selected)' }} &lt;/bs-label>
         &lt;ul>
             &lt;li ng-repeat="brand in brands track by brand" 
                 bs-option="brand">{{ brand }}
@@ -187,6 +188,9 @@
         Select Street Fighter character: {{ sfChar }}
     &lt;/p>
     &lt;bs-select bs-output="sfChar">
+        &lt;bs-label>
+          &lt;img ng-src="images/{{sfChar}}.gif">&lt;/img>
+           {{ sfChar ? sfChar : '(Nothing selected)' }} &lt;/bs-label>
         &lt;ul>
             &lt;li ng-repeat="char in sfChars track by char" 
                 bs-option="char"> 
