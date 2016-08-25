@@ -10,12 +10,10 @@ select.selectpicker {
   display: none !important;
 }
 .bootstrap-select {
-  width: 220px \0;
+  
   /*IE9 and below*/
 }
 .bootstrap-select > .dropdown-toggle {
-  width: 100%;
-  padding-right: 25px;
   z-index: 1;
 }
 .bootstrap-select > .dropdown-toggle.bs-placeholder,
@@ -50,7 +48,7 @@ select.selectpicker {
   width: auto !important;
 }
 .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
-  width: 220px;
+  /* width: 220px; */
 }
 .bootstrap-select .dropdown-toggle:focus {
   outline: thin dotted #333333 !important;
@@ -114,11 +112,11 @@ select.selectpicker {
   text-align: left;
 }
 .bootstrap-select.btn-group .dropdown-toggle .caret {
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  margin-top: -2px;
-  vertical-align: middle;
+  /* position: absolute; */
+  /* top: 50%; */
+  /* right: 12px; */
+  /* margin-top: -2px; */
+  /* vertical-align: middle; */
 }
 .bootstrap-select.btn-group[class*="col-"] .dropdown-toggle {
   width: 100%;

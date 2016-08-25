@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
     <link rel="stylesheet" type="text/css" href="stylesheets/sunburst.css" media="print">
     <link rel="stylesheet" type="text/css" href="src/bootstrap-select-alt.css">
+    <link rel="stylesheet" type="text/css" href="src/ng-bootstrap-select-alt.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.js"></script>
@@ -43,6 +44,40 @@
             <a class="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why? There are many libraries like this already.
           </h3>
           <p>Yes, but I don't really dig the already existing ones.</p>
+          <h3>
+            <aclass="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>New version
+          </h3>
+          <my-code>
+&lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
+  &lt;p>
+    Selected brands: {{ singleBrands }}
+  &lt;/p>
+  &lt;div bs-dropdown="singleBrands">
+    &lt;ul>
+      &lt;li ng-repeat="brand in brands track by brand" bs-option2="brand">
+        {{ brand }}
+      &lt;/li>
+    &lt;/ul>
+  &lt;/div>
+&lt;/div>
+          </my-code>
+          <h3>
+            <aclass="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use the options option
+          </h3>
+          <my-code>
+&lt;div ng-init="brands = ['McDonalds', 'Burger King', 'Wendys']">
+  &lt;p>
+    Selected brands: {{ singleBrands }}
+  &lt;/p>
+  &lt;bs-select bs-output="singleBrands">
+    &lt;ul>
+      &lt;li ng-repeat="brand in brands track by brand" bs-option="brand">
+        {{ brand }}
+      &lt;/li>
+    &lt;/ul>
+  &lt;/bs-select>
+&lt;/div>
+          </my-code>
           <h3>
             <aclass="anchor"aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>You can pretty much do anything with it
           </h3>
